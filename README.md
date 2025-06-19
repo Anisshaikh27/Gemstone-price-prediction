@@ -1,47 +1,77 @@
-# README.md
-
 # Gemstone Price Prediction
 
-This project aims to predict gemstone prices using various machine learning techniques. The dataset includes features such as gemstone type, weight, color, and clarity.
+This project predicts gemstone prices using machine learning.  
+Follow these steps to set up your environment and run the code.
 
-## Installation
+---
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/gemstone-price-prediction.git
-   ```
+## 1. Clone the Repository
 
-2. Navigate to the project directory:
-   ```
-   cd gemstone-price-prediction
-   ```
-
-3. Create a virtual environment:
-   ```
-   conda create -n gemstone-env python=3.8
-   ```
-
-4. Activate the environment:
-   ```
-   conda activate gemstone-env
-   ```
-
-5. Install the required packages:
-   ```
-   pip install -r requirements_dev.txt
-   ```
-
-## Usage
-
-To run the prediction model, execute the following command:
-```
-python main.py
+```sh
+git clone https://github.com/your-username/Gemstone-Price-Prediction.git
+cd Gemstone-Price-Prediction
 ```
 
-## Contributing
+---
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+## 2. Install Miniconda (if not already installed)
 
-## License
+Download and install Miniconda from [here](https://docs.conda.io/en/latest/miniconda.html).
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+---
+
+## 3. Create a Conda Environment
+
+```sh
+conda create --prefix ./env python=3.8 -y
+```
+
+---
+
+## 4. Activate the Environment
+
+**On Windows Command Prompt:**
+```sh
+conda activate %cd%\env
+```
+**Or (from project root):**
+```sh
+conda activate ./env
+```
+
+---
+
+## 5. Install Dependencies
+
+```sh
+pip install -r requirements_dev.txt
+```
+
+---
+
+## 6. Run the Template Script
+
+```sh
+python template.py
+```
+
+---
+
+## 7. Deactivate the Environment (when done)
+
+```sh
+conda deactivate
+```
+
+---
+
+## Notes
+
+- If you use Jupyter notebooks, install Jupyter in your environment:
+  ```sh
+  pip install notebook
+  ```
+- If you encounter issues with environment activation, ensure Miniconda is added to your PATH and you have run `conda init` for your shell.
+
+
+**Enjoy predicting gemstone

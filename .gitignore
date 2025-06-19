@@ -21,3 +21,7 @@ __pycache__/
 
 # Ignore OS files
 .DS_Store
+Thumbs.db
+
+# Ignore dataset CSV file
+experiment/gemstone.csv
