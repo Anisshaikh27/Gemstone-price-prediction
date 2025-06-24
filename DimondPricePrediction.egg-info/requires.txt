@@ -1,5 +1,6 @@
-ensure==1.0.2
-py-youtube==1.1.7
+scikit-learn
+pandas
+numpy
 
 [testing]
 pytest>=7.1.3
