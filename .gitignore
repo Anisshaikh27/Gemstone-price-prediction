@@ -1,27 +1,92 @@
-# Ignore Conda/venv environments
+# Python virtual environments
 env/
-.env/
-ENV/
-.ENV/
-venv/
 .venv/
+venv/
+ENV/
+.env/
+.ENV/
 
-# Ignore Python cache and logs
+# Python cache files
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.log
+*.py[cod]
+*$py.class
 
-# Ignore Jupyter Notebook checkpoints
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-# Ignore VS Code settings
+# VS Code settings
 .vscode/
 
-# Ignore OS files
+# OS files
 .DS_Store
 Thumbs.db
 
-# Ignore dataset CSV file
+# Logs
+*.log
+
+# Dataset and experiment files
 experiment/gemstone.csv
+logs/
+
+# Local environment variables
+.env.local
+.env.*.local
+
+# Pyre type checker
+.pyre/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PyCharm
+.idea/
+
+# Ignore egg-info and wheel metadata
+*.egg-info/
+*.egg
+
+# Ignore build artifacts
+build/
+dist/
+artifacts/
+models/
+outputs/
