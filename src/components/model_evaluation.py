@@ -3,12 +3,14 @@ import sys
 import mlflow
 import mlflow.sklearn
 import numpy as np
+import datetime
 
 from src.utils.utils import load_object
 from urllib.parse import urlparse
 from sklearn.metrics import mean_squared_error,mean_absolute_error,r2_score
 from src.logger.logging import logging
 from src.exception. exception import customexception
+
 
 class ModelEvaluation:
     def __init__(self):
@@ -57,7 +59,12 @@ class ModelEvaluation:
                     # https://mlflow.org/docs/latest/model-registry.html#api-workflow
                     mlflow.sklearn.log_model(model, "model", registered_model_name="ml_model")
                 else:
-                    mlflow.sklearn.log_model(model, "model")
+                    model_name = "model_" + datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                    mlflow.sklearn.log_model(
+                                sk_model=model,
+                                artifact_path="model",
+                                registered_model_name=model_name  # Use the timestamped name
+                     )
 
 
         except Exception as e:

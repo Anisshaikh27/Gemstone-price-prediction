@@ -62,7 +62,7 @@ Thumbs.db
 *.log
 
 # Dataset and experiment files
-experiment/gemstone.csv
+data/gemstone.csv
 logs/
 
 # Local environment variables
@@ -90,3 +90,6 @@ dist/
 artifacts/
 models/
 outputs/
+
+# Ignore MLflow tracking directory
+mlruns/
