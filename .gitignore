@@ -65,6 +65,8 @@ Thumbs.db
 data/gemstone.csv
 logs/
 
+
+
 # Local environment variables
 .env.local
 .env.*.local
@@ -93,3 +95,8 @@ outputs/
 
 # Ignore MLflow tracking directory
 mlruns/
+
+# ignore dvc remote repository (generally s3 bucket )
+#  for others to pull data of different versions 
+
+dvc_remote/

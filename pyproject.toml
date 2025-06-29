@@ -56,9 +56,10 @@ include = ["src*"]
 testpaths = [
     "tests"
 ]
-python_files = ["test_.py", "_test.py"]
+python_files = ["test_*.py", "*_test.py"]  # ← Changed test_.py to test_*.py
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+
 
 [tool.mypy]
 mypy_path = "src"
