@@ -37,5 +37,8 @@ jobs:
 
       - name: Run tests with pytest
         run: |
-          pytest -v tests/unit
-          pytest -v tests/integration
+          pytest -v --tb=short
+
+      - name: Post Set up Python
+        run: |
+          echo "Tests completed"
