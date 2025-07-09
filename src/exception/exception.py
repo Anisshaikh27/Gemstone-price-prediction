@@ -1,9 +1,8 @@
 import sys
-
 import traceback
 
 # Alternative approach using traceback module (more robust)
-class CustomException(Exception):
+class customexception(Exception):
     """Custom exception class using traceback module."""
     
     def __init__(self, error_message: str) -> None:
@@ -30,4 +29,4 @@ if __name__ == "__main__":
     try:
         a = 1 / 0
     except Exception as e:
-        raise CustomException(str(e))
+        raise customexception(str(e))
