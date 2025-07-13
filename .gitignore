@@ -100,3 +100,6 @@ mlruns/
 #  for others to pull data of different versions 
 
 dvc_remote/
+
+# ignore environment variables
+.env

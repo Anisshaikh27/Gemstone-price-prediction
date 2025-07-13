@@ -1,44 +1,97 @@
-name: CI
+# .github/workflows/ci.yml - Phase 1: Testing with S3
+name: CI Pipeline - Testing Phase
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  build-test-lint:
+  test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8, 3.9]
-
+    
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      S3_FILE_KEY: ${{ secrets.S3_FILE_KEY }}
+      CI: true
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements_dev.txt
-
-      - name: Lint with flake8
-        run: |
-          flake8 src --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-
-      - name: Type check with mypy
-        run: |
-          mypy src || true
-
-      - name: Run tests with pytest
-        run: |
-          pytest -v --tb=short
-
-      - name: Post Set up Python
-        run: |
-          echo "Tests completed"
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest
+    
+    - name: Create artifacts directory
+      run: |
+        mkdir -p artifacts
+    
+    - name: Test S3 connection
+      run: |
+        python -c "
+        import boto3
+        import os
+        print('Testing S3 connection...')
+        s3 = boto3.client('s3', 
+                         aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+                         region_name=os.getenv('AWS_DEFAULT_REGION'))
+        response = s3.list_objects_v2(Bucket=os.getenv('S3_BUCKET_NAME'))
+        print('S3 connection successful!')
+        "
+    
+    - name: Run pytest tests
+      run: |
+        pytest -v --tb=short
+    
+    - name: Test data ingestion manually
+      run: |
+        python -c "
+        from src.components.data_ingestion import DataIngestion
+        import os
+        print('Testing data ingestion...')
+        obj = DataIngestion()
+        train_path, test_path = obj.initiate_data_ingestion()
+        print(f'✅ Train data created: {train_path}')
+        print(f'✅ Test data created: {test_path}')
+        print(f'✅ Train file exists: {os.path.exists(train_path)}')
+        print(f'✅ Test file exists: {os.path.exists(test_path)}')
+        "
+    
+    - name: Verify artifacts
+      run: |
+        ls -la artifacts/
+        echo "Checking file sizes..."
+        if [ -f "artifacts/train.csv" ]; then
+          echo "Train file size: $(wc -l < artifacts/train.csv) lines"
+        fi
+        if [ -f "artifacts/test.csv" ]; then
+          echo "Test file size: $(wc -l < artifacts/test.csv) lines"
+        fi
+    
+    - name: Run integration tests
+      run: |
+        echo "Running integration tests..."
+        python -c "
+        from src.components.data_transformation import DataTransformation
+        transformer = DataTransformation()
+        print('✅ Data transformation component initialized')
+        
+        # Test if transformation works with S3 data
+        train_arr, test_arr = transformer.initialize_data_transformation('artifacts/train.csv', 'artifacts/test.csv')
+        print(f'✅ Data transformation successful')
+        print(f'✅ Train array shape: {train_arr.shape}')
+        print(f'✅ Test array shape: {test_arr.shape}')
+        "

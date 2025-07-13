@@ -16,4 +16,7 @@ black==22.8.0
 flake8==5.0.4
 mypy==0.971
 
+#s3 configuration
+boto3
+
 -e .
