@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: gemstone-price-predictor
+    env: docker
+    # This tells Render to use your Docker Hub image
+    image:
+      url: docker.io/${{ secrets.DOCKER_USERNAME }}/gemstone-app:latest
+    envVars:
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        sync: false
+      - key: S3_BUCKET_NAME
+        sync: false
+      - key: S3_FILE_KEY
+        sync: false
+      - key: FLASK_ENV
+        value: production
+    autoDeploy: true
+    branch: main
+    healthCheckPath: /health
+    plan: starter

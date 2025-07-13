@@ -95,3 +95,46 @@ jobs:
         print(f'✅ Train array shape: {train_arr.shape}')
         print(f'✅ Test array shape: {test_arr.shape}')
         "
+
+  # Step 2: Build and Push to Docker Hub
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Get code from GitHub
+      uses: actions/checkout@v4
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Build and Push Docker Image
+      run: |
+        # Build image with your Docker Hub username
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/gemstone-app:latest .
+        
+        # Push to Docker Hub
+        docker push ${{ secrets.DOCKER_USERNAME }}/gemstone-app:latest
+        
+        echo "✅ Image pushed to Docker Hub!"
+        echo "🐳 Image available at: ${{ secrets.DOCKER_USERNAME }}/gemstone-app:latest"
+
+  # Step 3: Deploy to Render
+  deploy:
+    needs: [test, build-and-push]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to Render
+      uses: johnbeynon/render-deploy-action@v0.0.8
+      with:
+        service-id: ${{ secrets.RENDER_SERVICE_ID }}
+        api-key: ${{ secrets.RENDER_API_KEY }}
+    
+    - name: Deployment Complete
+      run: |
+        echo "🎉 Your Docker image from Docker Hub is now live on Render!"
+        echo "🐳 Render pulled: ${{ secrets.DOCKER_USERNAME }}/gemstone-app:latest"

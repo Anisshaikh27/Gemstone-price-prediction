@@ -19,4 +19,10 @@ mypy==0.971
 #s3 configuration
 boto3
 
+# docker configuration
+docker
+
+# for accessing environment variables
+python-dotenv
+
 -e .
