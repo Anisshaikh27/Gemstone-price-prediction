@@ -1,0 +1,8 @@
+AWS_ACCESS_KEY_ID=xxxxxxxx
+AWS_DEFAULT_REGION=xxxxxxxx
+S3_BUCKET_NAME=xxxxxxxx
+S3_FILE_KEY=xxxxxxxx
+DOCKER_USERNAME=xxxxxxxx
+DOCKER_PASSWORD=xxxxxxxx
+RENDER_SERVICE_ID=xxxxxxxx
+RENDER_API_KEY=xxxxxxxx
