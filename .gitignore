@@ -89,7 +89,7 @@ dmypy.json
 # Ignore build artifacts
 build/
 dist/
-artifacts/
+artifacts/*.csv
 models/
 outputs/
 
