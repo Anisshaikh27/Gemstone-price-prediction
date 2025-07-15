@@ -1,2 +1,495 @@
-<h1>Welcome To Data Science Project Session</h1>
-<h2>Let's Learn And Get Jobs</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemstone Price Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .form-section, .result-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: "💎";
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row.triple {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        select option {
+            background: #333;
+            color: white;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .result-section {
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .price-display {
+            text-align: center;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .price-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .detail-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ffcccb;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row.triple {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💎 Gemstone Price Predictor</h1>
+            <p>AI-Powered Gemstone Valuation System</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Form Section -->
+            <div class="form-section">
+                <h2 class="section-title">Enter Gemstone Details</h2>
+                
+                <form id="predictionForm">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label for="carat">Carat Weight</label>
+                                <input type="number" id="carat" name="carat" step="0.01" placeholder="e.g., 1.25" required>
+                            </div>
+                            <div>
+                                <label for="cut">Cut Quality</label>
+                                <select id="cut" name="cut" required>
+                                    <option value="">Select Cut</option>
+                                    <option value="Fair">Fair</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Very Good">Very Good</option>
+                                    <option value="Premium">Premium</option>
+                                    <option value="Ideal">Ideal</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label for="color">Color Grade</label>
+                                <select id="color" name="color" required>
+                                    <option value="">Select Color</option>
+                                    <option value="D">D (Colorless)</option>
+                                    <option value="E">E (Colorless)</option>
+                                    <option value="F">F (Colorless)</option>
+                                    <option value="G">G (Near Colorless)</option>
+                                    <option value="H">H (Near Colorless)</option>
+                                    <option value="I">I (Near Colorless)</option>
+                                    <option value="J">J (Near Colorless)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="clarity">Clarity Grade</label>
+                                <select id="clarity" name="clarity" required>
+                                    <option value="">Select Clarity</option>
+                                    <option value="IF">IF (Internally Flawless)</option>
+                                    <option value="VVS1">VVS1 (Very Very Slightly Included)</option>
+                                    <option value="VVS2">VVS2 (Very Very Slightly Included)</option>
+                                    <option value="VS1">VS1 (Very Slightly Included)</option>
+                                    <option value="VS2">VS2 (Very Slightly Included)</option>
+                                    <option value="SI1">SI1 (Slightly Included)</option>
+                                    <option value="SI2">SI2 (Slightly Included)</option>
+                                    <option value="I1">I1 (Included)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div>
+                                <label for="depth">Depth Percentage</label>
+                                <input type="number" id="depth" name="depth" step="0.1" placeholder="e.g., 61.5" required>
+                            </div>
+                            <div>
+                                <label for="table">Table Percentage</label>
+                                <input type="number" id="table" name="table" step="0.1" placeholder="e.g., 55.0" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dimensions (mm)</label>
+                        <div class="form-row triple">
+                            <div>
+                                <input type="number" id="x" name="x" step="0.01" placeholder="Length (x)" required>
+                            </div>
+                            <div>
+                                <input type="number" id="y" name="y" step="0.01" placeholder="Width (y)" required>
+                            </div>
+                            <div>
+                                <input type="number" id="z" name="z" step="0.01" placeholder="Height (z)" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn">🔮 Predict Price</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">🔄 Reset</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Result Section -->
+            <div class="result-section" id="resultSection">
+                <h2 class="section-title">Price Prediction</h2>
+                
+                <div id="loadingDiv" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Analyzing your gemstone...</p>
+                </div>
+
+                <div id="errorDiv" class="error" style="display: none;"></div>
+
+                <div id="resultDiv" style="display: none;">
+                    <div class="price-display">
+                        <div class="price-amount" id="predictedPrice">$0</div>
+                        <div class="price-label">Estimated Price</div>
+                    </div>
+
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-value" id="caratDisplay">-</div>
+                            <div class="detail-label">Carat Weight</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value" id="cutDisplay">-</div>
+                            <div class="detail-label">Cut Quality</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value" id="colorDisplay">-</div>
+                            <div class="detail-label">Color Grade</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value" id="clarityDisplay">-</div>
+                            <div class="detail-label">Clarity Grade</div>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3 style="color: white; margin-bottom: 10px;">📊 Analysis Summary</h3>
+                        <p style="color: rgba(255,255,255,0.9); line-height: 1.5;" id="analysisText">
+                            Based on the provided specifications, this gemstone shows excellent characteristics for its category.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Show loading
+            document.getElementById('loadingDiv').style.display = 'block';
+            document.getElementById('errorDiv').style.display = 'none';
+            document.getElementById('resultDiv').style.display = 'none';
+            document.getElementById('resultSection').classList.add('show');
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                // Hide loading
+                document.getElementById('loadingDiv').style.display = 'none';
+                
+                if (response.ok && result.status === 'success') {
+                    // Show results
+                    document.getElementById('predictedPrice').textContent = '$' + (result.price).toLocaleString();
+                    document.getElementById('caratDisplay').textContent = data.carat;
+                    document.getElementById('cutDisplay').textContent = data.cut;
+                    document.getElementById('colorDisplay').textContent = data.color;
+                    document.getElementById('clarityDisplay').textContent = data.clarity;
+                    
+                    // Generate analysis text
+                    const price = result.price;
+                    let analysisText = `This ${data.carat} carat gemstone with ${data.cut} cut, ${data.color} color, and ${data.clarity} clarity `;
+                    
+                    if (price > 5000) {
+                        analysisText += "represents a premium quality gemstone with exceptional characteristics.";
+                    } else if (price > 2000) {
+                        analysisText += "shows very good quality with strong market appeal.";
+                    } else if (price > 1000) {
+                        analysisText += "demonstrates good quality suitable for various applications.";
+                    } else {
+                        analysisText += "offers good value with standard market characteristics.";
+                    }
+                    
+                    document.getElementById('analysisText').textContent = analysisText;
+                    document.getElementById('resultDiv').style.display = 'block';
+                } else {
+                    // Show error
+                    document.getElementById('errorDiv').textContent = result.error || 'An error occurred during prediction';
+                    document.getElementById('errorDiv').style.display = 'block';
+                }
+            } catch (error) {
+                // Hide loading and show error
+                document.getElementById('loadingDiv').style.display = 'none';
+                document.getElementById('errorDiv').textContent = 'Network error: ' + error.message;
+                document.getElementById('errorDiv').style.display = 'block';
+            }
+        });
+        
+        function resetForm() {
+            document.getElementById('predictionForm').reset();
+            document.getElementById('resultSection').classList.remove('show');
+        }
+    </script>
+</body>
+</html>

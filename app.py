@@ -10,31 +10,61 @@ app=Flask(__name__)
 def home_page():
     return render_template("index.html")
 
-@app.route("/predict",methods=["GET","POST"])
+@app.route("/predict", methods=["POST"])
 def predict_datapoint():
-    if request.method=="GET":
-        return render_template("form.html")
+    if request.method == "POST":
+        try:
+            # Handle JSON data from the frontend
+            if request.is_json:
+                json_data = request.get_json()
+                data = CustomData(
+                    carat=float(json_data.get("carat")),
+                    depth=float(json_data.get("depth")),
+                    table=float(json_data.get("table")),
+                    x=float(json_data.get("x")),
+                    y=float(json_data.get("y")),
+                    z=float(json_data.get("z")),
+                    cut=json_data.get("cut"),
+                    color=json_data.get("color"),
+                    clarity=json_data.get("clarity")
+                )
+            else:
+                # Handle form data (fallback)
+                data = CustomData(
+                    carat=float(request.form.get("carat")),
+                    depth=float(request.form.get("depth")),
+                    table=float(request.form.get("table")),
+                    x=float(request.form.get("x")),
+                    y=float(request.form.get("y")),
+                    z=float(request.form.get("z")),
+                    cut=request.form.get("cut"),
+                    color=request.form.get("color"),
+                    clarity=request.form.get("clarity")
+                )
+            
+            final_data = data.get_data_as_dataframe()
+            predict_pipeline = PredictPipeline()
+            pred = predict_pipeline.predict(final_data)
+            result = round(pred[0], 2)
+            
+            return jsonify({
+                'price': round(result, 2),
+                'status': 'success',
+                'timestamp': str(datetime.now())
+            })
+            
+        except ValueError as e:
+            return jsonify({
+                'status': 'error',
+                'error': f'Invalid input data: {str(e)}'
+            }), 400
+        except Exception as e:
+            return jsonify({
+                'status': 'error',
+                'error': f'Prediction failed: {str(e)}'
+            }), 500
     else:
-        data=CustomData(
-            carat=float(request.form.get("carat")),
-            depth=float(request.form.get("depth")),
-            table=float(request.form.get("table")),
-            x=float(request.form.get("x")),
-            y=float(request.form.get("y")),
-            z=float(request.form.get("z")),
-            cut=request.form.get("cut"),
-            color=request.form.get("color"),
-            clarity=request.form.get("clarity")
-        )
-        final_data=data.get_data_as_dataframe()
-
-        predict_pipeline=PredictPipeline()
-
-        pred=predict_pipeline.predict(final_data)
-
-        result=round(pred[0],2)
-
-        return render_template("result.html",final_result=result)
+        return jsonify({'status': 'error', 'message': 'Invalid request method'}), 405
 
 @app.route('/health')
 def health_check():
