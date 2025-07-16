@@ -1,82 +1,3 @@
-# Gemstone Price Prediction
-
-This project predicts gemstone prices using machine learning.  
-Follow these steps to set up your environment and run the code.
-
----
-
-## 1. Clone the Repository
-
-```sh
-git clone https://github.com/your-username/Gemstone-Price-Prediction.git
-cd Gemstone-Price-Prediction
-```
-
----
-
-## 2. Install Miniconda (if not already installed)
-
-Download and install Miniconda from [here](https://docs.conda.io/en/latest/miniconda.html).
-
----
-
-## 3. Create a Conda Environment
-
-```sh
-conda create --prefix ./env python=3.8 -y
-```
-
----
-
-## 4. Activate the Environment
-
-**On Windows Command Prompt:**
-```sh
-conda activate %cd%\env
-```
-**Or (from project root):**
-```sh
-conda activate ./env
-```
-
----
-
-## 5. Install Dependencies
-
-```sh
-pip install -r requirements_dev.txt
-```
-
----
-
-## 6. Run the Template Script
-
-```sh
-python template.py
-```
-
----
-
-## 7. Deactivate the Environment (when done)
-
-```sh
-conda deactivate
-```
-
----
-
-## Notes
-
-- If you use Jupyter notebooks, install Jupyter in your environment:
-  ```sh
-  pip install notebook
-  ```
-- If you encounter issues with environment activation, ensure Miniconda is added to your PATH and you have run `conda init` for your shell.
-
-
-**Enjoy predicting gemstone
-
-
 # 🔮 Gemstone Price Prediction
 
 A machine learning web application that predicts gemstone prices based on their physical characteristics using Random Forest regression. This project demonstrates professional ML deployment practices with secure artifact management.
@@ -96,34 +17,57 @@ A machine learning web application that predicts gemstone prices based on their 
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Local Dev     │    │   AWS S3        │    │   Render Cloud  │
 │                 │    │                 │    │                 │
-│ • Training      │───▶│ • Model.pkl     │───▶│ • Web App       │
+│ • Training      │───▶│ • Model.pkl    │───▶│ • Web App       │
 │ • MLflow        │    │ • Preprocessor  │    │ • Docker        │
-│ • Data Science  │    │ • Scaler        │    │ • Auto Deploy   │
+│ • Data Science  │    │                 │    │ • Auto Deploy   │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
 ## 📁 Project Structure
 
 ```
-gemstone-price-prediction/
-├── 📊 data/
-│   └── gemstone_data.csv         # Training dataset (NOT in git)
-├── 📦 artifacts/
-│   ├── model.pkl                 # Trained model (stored in S3)
-│   ├── preprocessor.pkl          # Data preprocessor (stored in S3)
-│   └── scaler.pkl                # Feature scaler (stored in S3)
-├── 📓 notebooks/
-│   └── EDA.ipynb                 # Exploratory Data Analysis
-├── 🏗️ src/
-│   ├── train.py                  # Model training pipeline
-│   ├── app.py                    # Flask web application
-│   ├── download_model.py         # S3 model downloader
-│   └── upload_to_s3.py           # S3 model uploader
-├── 🐳 Dockerfile                 # Container configuration
-├── 📋 requirements.txt           # Python dependencies
-├── 🚫 .gitignore                 # Git ignore rules
-├── 🔧 .env.example               # Environment variables template
-└── 📖 README.md                  # This file
+Gemstone-price-prediction/
+├── .github/
+│   └── workflows/ci.yml
+├── artifacts/
+│   ├── model.pkl
+│   ├── preprocessor.pkl
+│  
+├── logs/
+├── notebook/
+│   ├── Gemstone-Price-Prediction.ipynb
+│   └── experiments.ipynb
+|
+|
+├── src/   # source code
+│   ├── components/
+│   │   ├── __init__.py
+│   │   ├── data_ingestion.py
+│   │   ├── data_transformation.py
+│   │   ├── model_evaluation.py
+│   │   └── model_trainer.py
+│   ├── pipeline/
+│   │   ├── __init__.py
+│   │   ├── training_pipeline.py
+│   │   └── prediction_pipeline.py
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   └── utils.py
+│   ├── logger/logger.py
+│   ├── exeception/exception.py
+│   └── __init__.py
+|
+├── templates/
+│   └── index.html
+|
+├── .gitignore
+├── app.py
+├── requirements.txt
+├── requirements_dev.txt
+├── Dockerfile
+├── .dockerignore
+├── template.py
+└── README.md
 ```
 
 ## 🔧 Technology Stack
@@ -135,12 +79,18 @@ gemstone-price-prediction/
 - **Containerization**: Docker
 - **Deployment**: Render
 - **Version Control**: Git
+- **Data versioning**: DVC
+- **Environment Management**: Conda
+- **Testing**: pytest
+- **Linting**: flake8
+- **Deployment** : render
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.9+
+- Python 3.8 or higher
+- Conda (optional, for environment management)
 - Docker (optional, for containerization)
 - AWS Account (for S3 storage)
 - Git
@@ -172,13 +122,17 @@ pip install -r requirements.txt
 
 ```bash
 # Copy environment template
-cp .env.example .env
+AWS_ACCESS_KEY_ID=xxxxxxxx
+AWS_DEFAULT_REGION=xxxxxxxx
+S3_BUCKET_NAME=xxxxxxxx
+S3_FILE_KEY=xxxxxxxx
+DOCKER_USERNAME=xxxxxxxx
+DOCKER_PASSWORD=xxxxxxxx
+RENDER_SERVICE_ID=xxxxxxxx
+RENDER_API_KEY=xxxxxxxx
+PORT=xxxxxxxx
+FLASK_ENV=production
 
-# Edit .env with your AWS credentials
-AWS_ACCESS_KEY_ID=your_access_key_here
-AWS_SECRET_ACCESS_KEY=your_secret_key_here
-AWS_DEFAULT_REGION=us-east-1
-S3_BUCKET_NAME=your-gemstone-model-bucket
 ```
 
 ## 🎯 Model Training (Local Development)
@@ -204,7 +158,7 @@ mlflow server --host 0.0.0.0 --port 5000
 
 ```bash
 # Terminal 2: Run training pipeline
-python src/train.py
+python src/pipeline/training_pipeline.py
 
 # This will:
 # ✅ Load and preprocess data
@@ -213,30 +167,18 @@ python src/train.py
 # ✅ Save artifacts to artifacts/ folder
 ```
 
-### 4. Upload Model to S3
-
-```bash
-# Upload trained artifacts to S3
-python src/upload_to_s3.py
-
-# This uploads:
-# • model.pkl
-# • preprocessor.pkl
-# • scaler.pkl
-```
 
 ## 🏃‍♂️ Running Locally
 
 ### Option 1: Direct Python
 
 ```bash
-# Download models from S3 (first time)
-python src/download_model.py
+
 
 # Start Flask app
-python src/app.py
+python app.py
 
-# Access app at: http://localhost:5000
+# Access app at: http://localhost:PORT
 ```
 
 ### Option 2: Docker (Recommended)
